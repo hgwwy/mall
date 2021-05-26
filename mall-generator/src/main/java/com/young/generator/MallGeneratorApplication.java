@@ -16,7 +16,6 @@ import java.net.UnknownHostException;
 @Slf4j
 @EnableOpenApi
 @SpringBootApplication
-@MapperScan("com.young.generator.mapper")
 public class MallGeneratorApplication extends SpringBootServletInitializer {
 
     @Override

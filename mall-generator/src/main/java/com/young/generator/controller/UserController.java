@@ -1,14 +1,17 @@
 package com.young.generator.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.young.common.response.Result;
+import com.young.generator.entity.Users;
 import com.young.generator.service.IUserService;
+import com.young.generator.vo.UserQueryVO;
+import com.young.generator.vo.UserSaveVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 
 @Api("用户管理")
 @RestController
@@ -18,9 +21,40 @@ public class UserController {
 
     private final IUserService userService;
 
-    @ApiOperation(value = "获取用户列表")
-    @GetMapping("/list")
-    public ResponseEntity<?> list(){
-        return ResponseEntity.ok(userService.list());
+    @ApiOperation(value = "新增用户")
+    @PostMapping
+    public Result save(@Valid @RequestBody UserSaveVo vo) {
+        return Result.success(userService.insert(vo));
+    }
+
+    @ApiOperation(value = "更新用户")
+    @PutMapping
+    public Result update(@Valid @RequestBody UserSaveVo vo) {
+        return Result.success(userService.update(vo));
+    }
+
+    @ApiOperation(value = "删除用户")
+    @DeleteMapping("/{id}")
+    public Result del(@PathVariable String id) {
+        return Result.success(userService.del(id));
+    }
+
+    @ApiOperation(value = "分页获取用户列表")
+    @GetMapping("/page")
+    public Result page(@RequestBody UserQueryVO vo) {
+        IPage<Users> page = userService.page(vo);
+        return Result.success(page);
+    }
+
+    @ApiOperation(value = "根据id获取用户")
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable String id) {
+        return Result.success(userService.findById(id));
+    }
+
+    @ApiOperation(value = "根据名称获取用户")
+    @GetMapping
+    public Result getByName(@RequestParam String name) {
+        return Result.success(userService.findByName(name));
     }
 }

@@ -1,13 +1,24 @@
 package com.young.generator.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.young.generator.entity.Users;
+import com.young.generator.exception.UserNotFoundException;
 import com.young.generator.mapper.UserMapper;
 import com.young.generator.service.IUserService;
+import com.young.generator.vo.UserQueryVO;
+import com.young.generator.vo.UserSaveVo;
+import com.young.generator.vo.UserVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * @auther WangWY
@@ -17,6 +28,63 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @_(@Autowired))
-public class UserServiceImpl extends ServiceImpl<com.young.generator.mapper.UserMapper, Users> implements IUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, Users> implements IUserService {
     private final UserMapper UserMapper;
+
+
+    @Override
+    @Transactional
+    public Boolean insert(UserSaveVo user) {
+        Users users = new Users();
+        BeanUtils.copyProperties(user, users);
+        return UserMapper.insert(users) == 1;
+    }
+
+    @Override
+    @Transactional
+    public Boolean update(UserSaveVo user) {
+        Users users = new Users();
+        BeanUtils.copyProperties(user, users);
+        return UserMapper.updateById(users) == 1;
+    }
+
+    @Override
+    @Transactional
+    public Boolean del(String id) {
+        return UserMapper.deleteById(id) == 1;
+    }
+
+    @Override
+    public UserVo findById(String id) {
+        Users users = UserMapper.selectById(id);
+        return new UserVo(users);
+    }
+
+    @Override
+    public UserVo findByName(String name) {
+        if (StringUtils.isEmpty(name)) {
+            throw new UserNotFoundException("user not found with name:" + name);
+        }
+        Users users = UserMapper.selectOne(Wrappers.lambdaQuery(Users.class).eq(Users::getName, name));
+        return new UserVo(users);
+    }
+
+    @Override
+    public IPage<Users> page(UserQueryVO vo) {
+        Page<Users> page = new Page<>(vo.getPageNum(), vo.getPageSize());
+        LambdaQueryWrapper<Users> wrapper = Wrappers.lambdaQuery(Users.class)
+                .eq(vo.getName() != null, Users::getName, vo.getName())
+                .eq(vo.getSex() != null, Users::getSex, vo.getSex())
+                .eq(vo.getEmail() != null, Users::getEmail, vo.getEmail())
+                .eq(vo.getBirthday() != null, Users::getBirthday, vo.getBirthday())
+                .eq(vo.getDelFlag() != null, Users::getDelFlag, vo.getDelFlag())
+                .eq(vo.getCreatedBy() != null, Users::getCreatedBy, vo.getCreatedBy())
+                .eq(vo.getUpdatedBy() != null, Users::getUpdatedBy, vo.getUpdatedBy())
+                .ge(vo.getCreatedTimeS() != null, Users::getCreatedTime, vo.getCreatedTimeS())
+                .le(vo.getCreatedTimeE() != null, Users::getCreatedTime, vo.getCreatedTimeE())
+                .ge(vo.getUpdatedTimeS() != null, Users::getUpdatedTime, vo.getUpdatedTimeS())
+                .le(vo.getUpdatedTimeE() != null, Users::getUpdatedTime, vo.getUpdatedTimeE());
+        Page<Users> usersPage = UserMapper.selectPage(page, wrapper);
+        return usersPage;
+    }
 }

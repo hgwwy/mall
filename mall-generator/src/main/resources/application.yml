@@ -23,7 +23,7 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml
   global-config:
     db-config:
-      id-type: Auto
+      id-type: assign_uuid
       table-underline: true # 默认数据库字段为下划线格式
       logic-delete-field: del_flag  # 逻辑删除字段
       logic-delete-value: 1 # 删除
@@ -40,5 +40,4 @@ logging:
 # ===== 自定义swagger配置 ===== #
 springfox:
   documentation:
-    swagger-ui:
-      enabled: true
+    enabled: true
