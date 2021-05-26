@@ -1,31 +1,30 @@
-package com.young.generator;
+package com.young.consumer;
 
+import com.young.consumer.mq.Sink;
 import lombok.extern.slf4j.Slf4j;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Slf4j
-@EnableOpenApi
 @SpringBootApplication
-@MapperScan("com.young.generator.mapper")
-public class MallGeneratorApplication extends SpringBootServletInitializer {
+@EnableBinding(Sink.class)
+public class ConsumerApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(MallGeneratorApplication.class);
+        return application.sources(ConsumerApplication.class);
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        ConfigurableApplicationContext application = SpringApplication.run(MallGeneratorApplication.class, args);
+        ConfigurableApplicationContext application = SpringApplication.run(ConsumerApplication.class, args);
         Environment env = application.getEnvironment();
         String ip = InetAddress.getLocalHost().getHostAddress();
         String port = env.getProperty("server.port");
