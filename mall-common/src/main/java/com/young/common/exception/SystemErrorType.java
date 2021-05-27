@@ -8,6 +8,7 @@ public enum SystemErrorType implements ErrorType {
     SYSTEM_ERROR("-1", "系统异常"),
     SYSTEM_BUSY("000001", "系统繁忙,请稍候再试"),
 
+    INVALID_FORMAT_EXCEPTION("100001", "参数类型转换出错"),
     GATEWAY_NOT_FOUND_SERVICE("010404", "服务未找到"),
     GATEWAY_ERROR("010500", "网关异常"),
     GATEWAY_CONNECT_TIME_OUT("010002", "网关超时"),

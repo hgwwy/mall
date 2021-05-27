@@ -31,7 +31,6 @@ public class JacksonGlobalConfig implements WebMvcConfigurer {
                 .timeZone(TimeZone.getTimeZone("GMT+8"))
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .failOnUnknownProperties(false)
-                .propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                 .modules(javaTimeModule)
                 .featuresToEnable(SerializationFeature.WRITE_SINGLE_ELEM_ARRAYS_UNWRAPPED)
                 .featuresToEnable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)

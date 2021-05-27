@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -23,8 +22,8 @@ public class PoJoMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, "createdBy", String.class, getCurrentUsername());
-        this.strictUpdateFill(metaObject, "createdTime", () -> new Date(), Date.class);
+        this.strictInsertFill(metaObject, "createdBy", String.class, getCurrentUsername());
+        this.strictInsertFill(metaObject, "createdTime", () -> new Date(), Date.class);
     }
 
     @Override
