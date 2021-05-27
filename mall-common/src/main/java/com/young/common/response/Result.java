@@ -38,7 +38,7 @@ public class Result<T> {
      */
     public Result(ErrorType errorType) {
         this.code = errorType.getCode();
-        this.msg = errorType.getMesg();
+        this.msg = errorType.getMsg();
         this.time = ZonedDateTime.now().toInstant();
     }
 
@@ -55,12 +55,12 @@ public class Result<T> {
      * 内部使用，用于构造成功的结果
      *
      * @param code
-     * @param mesg
+     * @param msg
      * @param data
      */
-    private Result(String code, String mesg, T data) {
+    private Result(String code, String msg, T data) {
         this.code = code;
-        this.msg = mesg;
+        this.msg = msg;
         this.data = data;
         this.time = ZonedDateTime.now().toInstant();
     }

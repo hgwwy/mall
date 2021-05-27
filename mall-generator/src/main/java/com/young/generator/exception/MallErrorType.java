@@ -15,10 +15,10 @@ public enum MallErrorType implements ErrorType {
     /**
      * 错误类型描述信息
      */
-    private String mesg;
+    private String msg;
 
-    MallErrorType(String code, String mesg) {
+    MallErrorType(String code, String msg) {
         this.code = code;
-        this.mesg = mesg;
+        this.msg = msg;
     }
 }

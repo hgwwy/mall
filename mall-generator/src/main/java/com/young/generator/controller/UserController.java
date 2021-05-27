@@ -9,10 +9,12 @@ import com.young.generator.vo.UserSaveVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
+@Slf4j
 @Api("用户管理")
 @RestController
 @RequestMapping(value = "/user")
@@ -24,6 +26,7 @@ public class UserController {
     @ApiOperation(value = "新增用户")
     @PostMapping
     public Result save(@Valid @RequestBody UserSaveVo vo) {
+        log.info("新增用户:{}",vo);
         return Result.success(userService.insert(vo));
     }
 
@@ -40,7 +43,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "分页获取用户列表")
-    @GetMapping("/page")
+    @PostMapping("/page")
     public Result page(@RequestBody UserQueryVO vo) {
         IPage<Users> page = userService.page(vo);
         return Result.success(page);
