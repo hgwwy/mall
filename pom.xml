@@ -29,6 +29,7 @@
         <joda.version>2.10.10</joda.version>
         <druid.version>1.1.22</druid.version>
         <mysql.version>8.0.21</mysql.version>
+        <jetcache.version>2.6.0</jetcache.version>
     </properties>
 
     <dependencies>
@@ -104,6 +105,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-generator</artifactId>
                 <version>${mybatis.plus.generator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alicp.jetcache</groupId>
+                <artifactId>jetcache-starter-redis</artifactId>
+                <version>${jetcache.version}</version>
             </dependency>
 
             <dependency>

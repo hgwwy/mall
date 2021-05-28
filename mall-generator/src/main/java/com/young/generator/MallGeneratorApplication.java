@@ -1,5 +1,7 @@
 package com.young.generator;
 
+import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +16,8 @@ import java.net.UnknownHostException;
 
 @Slf4j
 @EnableOpenApi
+@EnableCreateCacheAnnotation
+@EnableMethodCache(basePackages = "com.young.generator")
 @SpringBootApplication
 public class MallGeneratorApplication extends SpringBootServletInitializer {
 

@@ -28,6 +28,6 @@ public interface IUserService extends IService<Users> {
 
     UserVo findByName(String name);
 
-    IPage<Users> page(UserQueryVO vo);
+    IPage<UserVo> page(UserQueryVO vo);
 
 }

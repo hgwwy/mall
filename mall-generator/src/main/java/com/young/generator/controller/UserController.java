@@ -2,16 +2,17 @@ package com.young.generator.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.young.common.response.Result;
-import com.young.generator.entity.Users;
 import com.young.generator.service.IUserService;
 import com.young.generator.vo.UserQueryVO;
 import com.young.generator.vo.UserSaveVo;
+import com.young.generator.vo.UserVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class UserController {
     @ApiOperation(value = "新增用户")
     @PostMapping
     public Result save(@Valid @RequestBody UserSaveVo vo) {
-        log.info("新增用户:{}",vo);
+        log.info("新增用户:{}", vo);
         return Result.success(userService.insert(vo));
     }
 
@@ -45,7 +46,7 @@ public class UserController {
     @ApiOperation(value = "分页获取用户列表")
     @PostMapping("/page")
     public Result page(@RequestBody UserQueryVO vo) {
-        IPage<Users> page = userService.page(vo);
+        IPage<UserVo> page = userService.page(vo);
         return Result.success(page);
     }
 

@@ -1,5 +1,8 @@
 package com.young.generator.service.impl;
 
+import com.alicp.jetcache.anno.CacheInvalidate;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -42,6 +45,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, Users> implements I
 
     @Override
     @Transactional
+    @CacheInvalidate(name = "user::", key = "#user.id")
     public Boolean update(UserSaveVo user) {
         Users users = new Users();
         BeanUtils.copyProperties(user, users);
@@ -50,17 +54,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, Users> implements I
 
     @Override
     @Transactional
+    @CacheInvalidate(name = "user::", key = "#id")
     public Boolean del(String id) {
         return UserMapper.deleteById(id) == 1;
     }
 
     @Override
+    @Cached(name = "user::", key = "#id", cacheType = CacheType.BOTH)
     public UserVo findById(String id) {
         Users users = UserMapper.selectById(id);
         return new UserVo(users);
     }
 
     @Override
+    @Cached(name = "user::", key = "#name", cacheType = CacheType.BOTH)
     public UserVo findByName(String name) {
         if (StringUtils.isEmpty(name)) {
             throw new UserNotFoundException("user not found with name:" + name);
@@ -70,7 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, Users> implements I
     }
 
     @Override
-    public IPage<Users> page(UserQueryVO vo) {
+    public IPage<UserVo> page(UserQueryVO vo) {
         Page<Users> page = new Page<>(vo.getPageNum(), vo.getPageSize());
         LambdaQueryWrapper<Users> wrapper = Wrappers.lambdaQuery(Users.class)
                 .eq(vo.getName() != null, Users::getName, vo.getName())
@@ -85,6 +92,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, Users> implements I
                 .ge(vo.getUpdatedTimeS() != null, Users::getUpdatedTime, vo.getUpdatedTimeS())
                 .le(vo.getUpdatedTimeE() != null, Users::getUpdatedTime, vo.getUpdatedTimeE());
         Page<Users> usersPage = UserMapper.selectPage(page, wrapper);
-        return usersPage;
+        return usersPage.convert(UserVo::new);
     }
 }
