@@ -1,14 +1,3 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /mall
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
 spring:
   redis:
     host: localhost
@@ -18,7 +7,7 @@ spring:
       pool:
         max-active: 300
   datasource:
-    url:  jdbc:mysql://localhost:3306/mall?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url:  jdbc:mysql://localhost:3306/mall-gateway?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     hikari:
       username: root
       password: root
@@ -39,15 +28,22 @@ mybatis-plus:
     call-setters-on-nulls: true
   type-enums-package: com.young.common.enums # 枚举类型
 
-logging:
-  config: classpath:logback-spring.xml
-  level:
-    com.young.generator.mapper: debug
+feign:
+  sentinel:
+    enabled: true
+  okhttp:
+    enabled: true
+
+#网关白名单，无需要签权url
+gate:
+  ignore:
+    authentication:
+      startWith: /oauth,/open,/v2/api-docs
 
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false
-  hidePackages: com.young.mall.generator
+  hidePackages: com.young.mall.gateway
   local:
     # 默认2小时本地缓存
     default:
@@ -107,3 +103,13 @@ jetcache:
         maxTotal: 50
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.young.gateway.admin.mapper: debug

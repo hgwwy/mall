@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(value = "UserQueryVO", description = "用户查询实体")
+@ApiModel(value = "BaseQueryVO", description = "通用查询实体")
 public class BaseQueryVO {
 
     @ApiModelProperty(value = "页数")
@@ -13,9 +13,6 @@ public class BaseQueryVO {
 
     @ApiModelProperty(value = "条数")
     private Integer pageSize = 10;
-
-    @ApiModelProperty(value = "是否删除")
-    private Boolean delFlag;
 
     @ApiModelProperty(value = "创建人")
     private String createdBy;
@@ -28,10 +25,4 @@ public class BaseQueryVO {
 
     @ApiModelProperty(value = "更新人")
     private String updatedBy;
-
-    @ApiModelProperty(value = "开始更新时间")
-    private String updatedTimeS;
-
-    @ApiModelProperty(value = "结束更新时间")
-    private String updatedTimeE;
 }

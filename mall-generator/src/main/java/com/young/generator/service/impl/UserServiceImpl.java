@@ -84,13 +84,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, Users> implements I
                 .eq(vo.getSex() != null, Users::getSex, vo.getSex())
                 .eq(vo.getEmail() != null, Users::getEmail, vo.getEmail())
                 .eq(vo.getBirthday() != null, Users::getBirthday, vo.getBirthday())
-                .eq(vo.getDelFlag() != null, Users::getDelFlag, vo.getDelFlag())
                 .eq(vo.getCreatedBy() != null, Users::getCreatedBy, vo.getCreatedBy())
                 .eq(vo.getUpdatedBy() != null, Users::getUpdatedBy, vo.getUpdatedBy())
                 .ge(vo.getCreatedTimeS() != null, Users::getCreatedTime, vo.getCreatedTimeS())
-                .le(vo.getCreatedTimeE() != null, Users::getCreatedTime, vo.getCreatedTimeE())
-                .ge(vo.getUpdatedTimeS() != null, Users::getUpdatedTime, vo.getUpdatedTimeS())
-                .le(vo.getUpdatedTimeE() != null, Users::getUpdatedTime, vo.getUpdatedTimeE());
+                .le(vo.getCreatedTimeE() != null, Users::getCreatedTime, vo.getCreatedTimeE());
         Page<Users> usersPage = UserMapper.selectPage(page, wrapper);
         return usersPage.convert(UserVo::new);
     }

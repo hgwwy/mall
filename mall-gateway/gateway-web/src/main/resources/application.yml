@@ -1,14 +1,3 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /mall
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
 spring:
   redis:
     host: localhost
@@ -18,13 +7,31 @@ spring:
       pool:
         max-active: 300
   datasource:
-    url:  jdbc:mysql://localhost:3306/mall?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    url:  jdbc:mysql://localhost:3306/mall-gateway?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     hikari:
       username: root
       password: root
 #      mysql版本 >= 6.x com.mysql.cj.jdbc.Driver
 #      mysql版本 <= 5.x com.mysql.jdbc.Driver
       driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      jwt:
+        signingKey: 123456
+  cloud:
+    gateway:
+      default-filters:
+        - name: Retry
+          args:
+            retries: 3
+            statuses: BAD_GATEWAY
+        - AddResponseHeader=X-Response-Default-Foo, Default-Bar
+        - name: RequestRateLimiter
+          args:
+            redis-rate-limiter.replenishRate: 2  #流速 每秒
+            redis-rate-limiter.burstCapacity: 10   #令牌桶的容积
+#            rate-limiter: "#{@defaultRedisRateLimiter}"  #SPEL表达式去的对应的bean
+            key-resolver: "#{@apiKeyResolver}" #SPEL表达式去的对应的bean
 
 mybatis-plus:
   mapper-locations: classpath*:/mapper/*.xml
@@ -39,15 +46,11 @@ mybatis-plus:
     call-setters-on-nulls: true
   type-enums-package: com.young.common.enums # 枚举类型
 
-logging:
-  config: classpath:logback-spring.xml
-  level:
-    com.young.generator.mapper: debug
 
 jetcache:
   statIntervalMinutes: 15
   areaInCacheName: false
-  hidePackages: com.young.mall.generator
+  hidePackages: com.young.mall.gateway
   local:
     # 默认2小时本地缓存
     default:
@@ -107,3 +110,13 @@ jetcache:
         maxTotal: 50
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  config: classpath:logback-spring.xml
+  level:
+    com.young.gateway.web.mapper: debug
